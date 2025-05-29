@@ -37,3 +37,21 @@ if (OpenMP_CXX_FOUND)
     OpenMP::OpenMP_CXX
 )
 endif()
+
+add_custom_command(TARGET ImageProcessor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_world4110d.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_ffmpeg4110_64.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_msmf4110_64.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_msmf4110_64d.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_world4110.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+)

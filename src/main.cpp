@@ -4,9 +4,10 @@
 #include "ImageProcessor.h"
 
 int main(int argc, char* argv[]) {
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
     std::cout << "Program started" << std::endl;
-    std::string inputFolder = "../input/";
-    std::string outputFolder = "../output/";
+    std::string inputFolder = "../../input/";
+    std::string outputFolder = "../../output/";
     double alpha = 1.0, beta = 0.0, sigma = 1.0, strength = 0.0;
 
     if (argc >= 5) {
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
 
     ImageProcessor imageProcessor;
     try {
+        std::cout << "Before loadImages" << std::endl;
         imageProcessor.loadImages(inputFolder);
         std::cout << "Loaded images from " << inputFolder << std::endl;
         imageProcessor.processImages(alpha, beta, sigma, strength);
