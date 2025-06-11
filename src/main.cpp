@@ -8,6 +8,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Program started" << std::endl;
     std::string inputFolder = "../../input/";
     std::string outputFolder = "../../output/";
+    // Default parameters for image processing
     double alpha = 1.0, beta = 0.0, sigma = 1.0, strength = 0.0;
 
     if (argc >= 5) {

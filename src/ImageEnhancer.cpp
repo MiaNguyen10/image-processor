@@ -3,6 +3,7 @@
 #include <omp.h>
 #include <iostream>
 
+// Enhance brightness of the image
 void ImageEnhancer::enhanceBrightness(cv::Mat& image, double alpha) {
     if (alpha < 0.0 || alpha > 3.0) {
         std::cout << "[WARNING] Brightness alpha out of range (0.0 - 3.0): " << alpha << std::endl;
@@ -11,6 +12,7 @@ void ImageEnhancer::enhanceBrightness(cv::Mat& image, double alpha) {
     image.convertTo(image, CV_8UC3, alpha, 0);
 }
 
+// Enhance contrast of the image
 void ImageEnhancer::enhanceContrast(cv::Mat& image, double beta) {
     if (beta < -100.0 || beta > 100.0) {
         std::cout << "[WARNING] Contrast beta out of range (-100 - 100): " << beta << std::endl;
@@ -19,6 +21,8 @@ void ImageEnhancer::enhanceContrast(cv::Mat& image, double beta) {
     image.convertTo(image, CV_8UC3, 1, beta);
 }
 
+
+// Enhance sharpness of the image
 void ImageEnhancer::enhanceSharpness(cv::Mat& image, double sigma, double strength) {
     if (sigma <= 0.0 || sigma > 10.0) {
         std::cout << "[WARNING] Sharpness sigma out of range (0.1 - 10.0): " << sigma << std::endl;
@@ -32,12 +36,14 @@ void ImageEnhancer::enhanceSharpness(cv::Mat& image, double sigma, double streng
     cv::addWeighted(image, 1 + strength, blurred, -strength, 0, image);
 }
 
+// Process a single image with specified parameters
 void ImageEnhancer::processImage(cv::Mat& image, double brightnessFactor, double contrastFactor, double sigmaFactor, double sharpnessStrength) {
     enhanceBrightness(image, brightnessFactor);
     enhanceContrast(image, contrastFactor);
     enhanceSharpness(image, sigmaFactor, sharpnessStrength);
 }
 
+// Process a batch of images in parallel
 void ImageEnhancer::processImages(std::vector<cv::Mat>& images, double brightnessFactor, double contrastFactor, double sigmaFactor, double sharpnessStrength) {
     #pragma omp parallel for
     for (int i = 0; i < static_cast<int>(images.size()); ++i) {
