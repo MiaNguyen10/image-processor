@@ -18,16 +18,29 @@ void ImageProcessor::loadImages(const std::string& inputFolder) {
     }
 }
 
-void ImageProcessor::processImages(double alpha, double beta, double sigma, double strength) {
-    for (auto& image : images) {
-        ImageEnhancer::enhanceBrightness(image, alpha);
-        ImageEnhancer::enhanceContrast(image, beta);
-        ImageEnhancer::enhanceSharpness(image, sigma, strength);
+void ImageProcessor::processImages(double alpha, double beta, double sigma, double strength, bool parallel) {
+    if (parallel) {
+        ImageEnhancer::processImages(images, alpha, beta, sigma, strength);
+    } else {
+        for (auto& image : images) {
+            ImageEnhancer::processImage(image, alpha, beta, sigma, strength);
+        }
     }
 }
 
 void ImageProcessor::saveImages(const std::string& outputFolder) {
     for (size_t i = 0; i < images.size(); ++i) {
         cv::imwrite(outputFolder + "/" + imageNames[i], images[i]);
+    }
+}
+
+std::vector<cv::Mat> ImageProcessor::getImages() const {
+    return images;
+}
+
+void ImageProcessor::setImages(const std::vector<cv::Mat>& newImages) {
+    images.clear();
+    for (const auto& img : newImages) {
+        images.push_back(img.clone());  // ensure deep copy
     }
 }
