@@ -1,64 +1,169 @@
+
 # Auto-Enhancing Image Processing System
 
-This project implements an auto-enhancing image processing system using OpenCV and OpenMP. The system is designed to improve the brightness, contrast, and sharpness of digital images in bulk. It loads images from a specified input folder, applies enhancements, and saves the enhanced images to an output folder.
+This project implements a batch image enhancement tool using **C++**, **OpenCV**, and **OpenMP**. It automatically improves the **brightness**, **contrast**, and **sharpness** of digital images in bulk. The system reads images from an input folder, processes them with enhancement algorithms, and writes the results to an output folder.
+
+---
 
 ## Project Structure
 
 ```
-image-processor
-├── src
-│   ├── main.cpp               # Entry point of the application
-│   ├── ImageProcessor.cpp      # Implementation of the ImageProcessor class
-│   ├── ImageProcessor.h        # Header file for the ImageProcessor class
-│   ├── ImageEnhancer.cpp       # Implementation of the ImageEnhancer class
-│   └── ImageEnhancer.h         # Header file for the ImageEnhancer class
-├── input
-│   └── .gitkeep               # Keeps the input directory in version control
-├── output
-│   └── .gitkeep               # Keeps the output directory in version control
-├── CMakeLists.txt             # CMake configuration file
-├── Makefile                   # Build instructions for the project
-└── README.md                  # Documentation for the project
+image-processor/
+├── src/                    # Source code directory
+│   ├── main.cpp            # Application entry point
+│   ├── ImageProcessor.h/cpp  # Image loading, saving, and processing manager
+│   ├── ImageEnhancer.h/cpp   # Enhancement algorithms (brightness, contrast, sharpness)
+├── input/                  # Place input images here
+│   └── .gitkeep
+├── output/                 # Output folder for enhanced images
+│   └── .gitkeep
+├── CMakeLists.txt          # CMake build configuration
+├── Makefile                # Alternative build instructions
+└── README.md               # Project documentation
 ```
+
+---
 
 ## Setup Instructions
 
-1. **Install Dependencies**: Ensure that you have OpenCV and OpenMP installed on your system. You can install OpenCV using package managers or build it from source.
+### 1. Install Dependencies
 
-2. **Clone the Repository**: Clone this repository to your local machine.
+Ensure you have the following installed on your system:
 
-3. **Build the Project**:
-   - Navigate to the project directory.
-   - Use CMake to configure the project:
+- **C++ Compiler** with C++17 support (e.g., `g++`, `clang++`, MSVC)
+- **OpenCV** (recommended version: 4.x)
+- **OpenMP** support (often included with GCC/Clang)
 
-     ```
-     mkdir build
-     cd build
-     cmake ..
-     ```
+> On Ubuntu:
+> ```bash
+> sudo apt update
+> sudo apt install libopencv-dev build-essential cmake
+> ```
 
-   - Compile the project using:
+> On Windows (with MSVC + vcpkg):
+> ```bash
+> vcpkg install opencv4
+> ```
 
-     ```
-     cmake --build .  
-     ```
+---
 
-## Usage Guidelines
+### 2. Clone the Repository
 
-1. Place the images you want to enhance in the `input` folder.
-2. Run the application:
-
-- Navigate to the project directory
-
-```
-    cd build/Debug
-   .\ImageProcessor.exe 1.2 30.0 1.5 0.5
+```bash
+git clone https://github.com/MiaNguyen10/image-processor.git
+cd image-processor
 ```
 
-3. The enhanced images will be saved in the `output` folder.
+---
+
+### 3. Build the Project (Using CMake)
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+> Output binary will be created in `build/Debug` or `build/Release` depending on your compiler.
+
+---
+
+## Usage Instructions
+
+### 1. Prepare Input
+
+Place the images you want to enhance inside the `input/` folder.
+
+---
+
+### 2. Run the Executable
+
+Navigate to the build directory and run the program with CLI parameters:
+
+```bash
+cd build/Debug  # or build/Release depending on your platform
+./ImageProcessor 1.2 30.0 1.5 0.5
+```
+
+---
+
+### CLI Parameters
+
+```bash
+./ImageProcessor <brightness> <contrast> <sigma> <sharpness> [--sequential]
+```
+
+- `brightness` (`alpha`): e.g., `1.2` — 1.0 means no change
+- `contrast` (`beta`): e.g., `30.0` — 0.0 means no change
+- `sigma`: blur strength for sharpening, e.g., `1.5`
+- `sharpness`: amount of sharpening to apply, e.g., `0.5`
+- `--sequential`: *(optional)* runs in sequential (non-parallel) mode for benchmarking
+
+---
+
+### 3. Output
+
+Enhanced images will be saved automatically in the `output/` folder with the same filenames as the original input images.
+
+---
+
+## Benchmarking (Speedup Measurement)
+
+To compare **parallel** vs **sequential** performance:
+
+```bash
+# Parallel (default)
+./ImageProcessor 1.2 30.0 1.5 0.5
+
+# Sequential
+./ImageProcessor 1.2 30.0 1.5 0.5 --sequential
+```
+
+The terminal will output:
+
+```
+Processing mode: Parallel
+Elapsed time: 1.634 seconds
+```
+
+You can compute speedup manually:
+
+```
+Speedup = Sequential Time / Parallel Time
+```
+
+---
 
 ## Functionalities
 
-- **Brightness Enhancement**: Adjusts the brightness of the images.
-- **Contrast Enhancement**: Improves the contrast levels in the images.
-- **Sharpness Enhancement**: Increases the sharpness of the images for better clarity.
+- **Brightness Enhancement** — Multiplies pixel values by a given factor.
+- **Contrast Enhancement** — Adjusts contrast using a linear offset.
+- **Sharpness Enhancement** — Applies unsharp masking via Gaussian blur.
+
+---
+
+## Recommended Test Datasets
+
+- [LOL Dataset (Low-Light)](https://www.kaggle.com/datasets/soumikrakshit/lol-dataset)
+- [CID2013 (Degraded Images)](https://live.ece.utexas.edu/research/Quality/CID2013/)
+- [Darmstadt Noise Dataset (DND)](https://noise.visinf.tu-darmstadt.de/)
+
+Place sample images in the `input/` folder before testing.
+
+---
+
+## Credits & References
+
+- **OpenCV** — https://opencv.org
+- **OpenMP** — https://www.openmp.org
+- **Dataset References**:
+  - https://www.kaggle.com/datasets/soumikrakshit/lol-dataset
+  - E. C. Larson and D. M. Chandler, *Journal of Electronic Imaging*, 2010 (LC10)
+
+---
+
+## Authors
+
+- Ha Nguyen (ha.t.nguyen@abo.fi)  
+- Rifat Bin Monsur (rifat.binmonsur@abo.fi)
