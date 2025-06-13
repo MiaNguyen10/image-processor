@@ -26,7 +26,7 @@ void ImageProcessor::processImages(double alpha, double beta, double sigma, doub
             ImageEnhancer::processImage(image, alpha, beta, sigma, strength);
         }
     }
-
+}
 
 // Save processed images to the output folder
 void ImageProcessor::saveImages(const std::string& outputFolder) {
@@ -35,6 +35,8 @@ void ImageProcessor::saveImages(const std::string& outputFolder) {
     }
 }
 
+
+// Support benchmarking by allowing images to be reset between runs
 std::vector<cv::Mat> ImageProcessor::getImages() const {
     return images;
 }

@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
         imageProcessor.loadImages(inputFolder);
 
         // Store original images for reuse
-        auto originalImages = imageProcessor.getImages();  // You’ll need to add this function
+        auto originalImages = imageProcessor.getImages();
 
         // 🔁 Run Parallel Mode
         imageProcessor.setImages(originalImages); // Reset to original
@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
         imageProcessor.processImages(alpha, beta, sigma, strength, true);
         auto end_parallel = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> parallel_time = end_parallel - start_parallel;
-        std::cout << "Parallel Time: " << parallel_time.count() << " seconds" << std::endl;
 
         // Save output of parallel run
         imageProcessor.saveImages(outputFolder + "/parallel");
@@ -45,13 +44,13 @@ int main(int argc, char* argv[]) {
         imageProcessor.processImages(alpha, beta, sigma, strength, false);
         auto end_seq = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> seq_time = end_seq - start_seq;
-        std::cout << "Parallel Time: " << parallel_time.count() << " seconds" << std::endl;
-        std::cout << "Sequential Time: " << seq_time.count() << " seconds" << std::endl;
 
         // Save output of sequential run
         imageProcessor.saveImages(outputFolder + "/sequential");
 
         // Report speedup
+        std::cout << "Parallel Time: " << parallel_time.count() << " seconds" << std::endl;
+        std::cout << "Sequential Time: " << seq_time.count() << " seconds" << std::endl;
         std::cout << "Speedup: " << seq_time.count() / parallel_time.count() << "x faster\n";
 
     } catch (const std::exception& e) {
