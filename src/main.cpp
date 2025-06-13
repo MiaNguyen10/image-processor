@@ -6,8 +6,11 @@
 int main(int argc, char* argv[]) {
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
     std::cout << "Program started" << std::endl;
-    std::string inputFolder = "D:/Education/Abo Akademi/Parallel Programming/Project/image-processor/input/low";
-    std::string outputFolder = "D:/Education/Abo Akademi/Parallel Programming/Project/image-processor/output";
+  
+    std::string inputFolder = "../../input/low";
+    std::string outputFolder = "../../output/";
+    // Default parameters for image processing
+
     double alpha = 1.0, beta = 0.0, sigma = 1.0, strength = 0.0;
 
     if (argc >= 5) {

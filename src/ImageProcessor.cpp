@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-
+// Load images from the input folder
 void ImageProcessor::loadImages(const std::string& inputFolder) {
     for (const auto& entry : std::filesystem::directory_iterator(inputFolder)) {
         if (entry.is_regular_file()) {
@@ -26,8 +26,9 @@ void ImageProcessor::processImages(double alpha, double beta, double sigma, doub
             ImageEnhancer::processImage(image, alpha, beta, sigma, strength);
         }
     }
-}
 
+
+// Save processed images to the output folder
 void ImageProcessor::saveImages(const std::string& outputFolder) {
     for (size_t i = 0; i < images.size(); ++i) {
         cv::imwrite(outputFolder + "/" + imageNames[i], images[i]);
