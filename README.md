@@ -16,7 +16,9 @@ image-processor/
 ├── input/                  # Place input images here
 │   └── .gitkeep
 ├── output/                 # Output folder for enhanced images
-│   └── .gitkeep
+│   ├── .gitkeep
+│   ├── parallel
+│   └── sequential
 ├── CMakeLists.txt          # CMake build configuration
 ├── Makefile                # Alternative build instructions
 └── README.md               # Project documentation
@@ -45,6 +47,36 @@ Ensure you have the following installed on your system:
 > vcpkg install opencv4
 > ```
 
+> Alternative:
+
+### Windows OpenCV Runtime Setup (DLL Copying)
+
+If you're using OpenCV on Windows and building with Visual Studio or CMake, make sure the required OpenCV DLLs are available next to your `ImageProcessor.exe`.
+
+To automate this, we've added a `post-build` step in the `CMakeLists.txt` to copy the necessary DLL files:
+
+```cmake
+add_custom_command(TARGET ImageProcessor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_world4110d.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_ffmpeg4110_64.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_msmf4110_64.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_videoio_msmf4110_64d.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "C:/opencv/build/x64/vc16/bin/opencv_world4110.dll"
+        $<TARGET_FILE_DIR:ImageProcessor>
+)
+```
+> This ensures that required OpenCV runtime DLLs are copied to the output folder (e.g., build/Debug/) automatically after every successful build.
+
+> Adjust the paths if your OpenCV version or build location differs.
 ---
 
 ### 2. Clone the Repository
@@ -113,24 +145,18 @@ Enhanced images will be saved automatically in the `output/` folder with the sam
 To compare **parallel** vs **sequential** performance:
 
 ```bash
-# Parallel (default)
+# will run both parallel and sequential together
 ./ImageProcessor 1.2 30.0 1.5 0.5
 
-# Sequential
-./ImageProcessor 1.2 30.0 1.5 0.5 --sequential
 ```
 
 The terminal will output:
 
 ```
-Processing mode: Parallel
-Elapsed time: 1.634 seconds
-```
+Parallel Time: XX.XX seconds
+Sequential Time: XX.XX seconds
+Speedup: Nx faster
 
-You can compute speedup manually:
-
-```
-Speedup = Sequential Time / Parallel Time
 ```
 
 ---
@@ -142,6 +168,18 @@ Speedup = Sequential Time / Parallel Time
 - **Sharpness Enhancement** — Applies unsharp masking via Gaussian blur.
 
 ---
+
+## 🔍 Source Code Details
+
+To learn more about the structure and functions inside the `src/` directory, including how the image enhancement and processing logic is implemented, refer to the [src/README.md](src/README.md) file.
+
+This includes:
+- Class and method descriptions
+- How parallel vs sequential processing is handled
+- File responsibilities and usage
+
+---
+
 
 ## Recommended Test Datasets
 
